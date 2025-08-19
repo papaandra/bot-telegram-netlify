@@ -1,0 +1,6 @@
+[build]
+  functions = "netlify/functions"
+  publish = "." # Direktori publikasi untuk situs utama Anda
+
+[functions]
+  node_bundler = "esbuild" # Menggunakan esbuild untuk membundel fungsi Node.js

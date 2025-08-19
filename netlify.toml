@@ -1,0 +1,10 @@
+    [build]
+      functions = "netlify/functions"
+      publish = "." # Atau folder tempat Anda ingin publish jika ada (misal: 'public')
+
+    [[plugins]]
+      package = "@netlify/plugin-deno"
+
+    [functions]
+      node_bundler = "none" # Penting untuk Deno Functions
+    

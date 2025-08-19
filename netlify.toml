@@ -1,10 +1,6 @@
-    [build]
-      functions = "netlify/functions"
-      publish = "." # Atau folder tempat Anda ingin publish jika ada (misal: 'public')
+[build]
+  functions = "netlify/functions"
+  publish = "."
 
-    [[plugins]]
-      package = "@netlify/plugin-deno"
-
-    [functions]
-      node_bundler = "none" # Penting untuk Deno Functions
-    
+[functions]
+  node_bundler = "none" # Ini sangat penting untuk memberitahu Netlify agar TIDAK memakai Node.js bundler

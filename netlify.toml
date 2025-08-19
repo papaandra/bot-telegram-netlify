@@ -1,6 +1,0 @@
-[build]
-  functions = "netlify/functions"
-  publish = "."
-
-[functions]
-  node_bundler = "none" # Ini sangat penting untuk memberitahu Netlify agar TIDAK memakai Node.js bundler

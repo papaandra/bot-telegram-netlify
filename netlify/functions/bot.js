@@ -70,12 +70,13 @@ bot.on('callback_query', async (ctx) => {
       const apps = await fetchNetlifyApps();
       const selectedApp = apps?.find((app) => app.id === appId);
 
-      // --- PERUBAHAN DI SINI: Menggunakan 'ssl_url' atau 'url' alih-alih 'admin_url' ---
+      // --- PERUBAHAN DI SINI: Menggunakan 'ssl_url' dan menambahkan '/admin.html' ---
       if (selectedApp && selectedApp.ssl_url) { // ssl_url adalah URL HTTPS yang di-deploy
+        const adminPageUrl = `${selectedApp.ssl_url}/admin.html`; // Tambahkan /admin.html
         await ctx.reply(
-          `Ini adalah link ke situs <b>${selectedApp.name}</b>:`,
+          `Ini adalah link ke halaman admin situs <b>${selectedApp.name}</b>:`,
           { 
-            reply_markup: { inline_keyboard: [[{ text: 'Buka Web', url: selectedApp.ssl_url }]] },
+            reply_markup: { inline_keyboard: [[{ text: 'Buka Web Admin', url: adminPageUrl }]] },
             parse_mode: 'HTML' 
           }
         );

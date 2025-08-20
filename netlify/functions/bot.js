@@ -66,21 +66,21 @@ bot.on('callback_query', async (ctx) => {
     const appId = data.replace('app_', '');
     
     try {
-      // Mengambil ulang daftar aplikasi untuk mendapatkan URL admin yang tepat
+      // Mengambil ulang daftar aplikasi untuk mendapatkan URL situs yang tepat
       const apps = await fetchNetlifyApps();
       const selectedApp = apps?.find((app) => app.id === appId);
 
-      if (selectedApp && selectedApp.admin_url) {
-        // Mengirim pesan dengan tombol URL ke halaman admin
+      // --- PERUBAHAN DI SINI: Menggunakan 'ssl_url' atau 'url' alih-alih 'admin_url' ---
+      if (selectedApp && selectedApp.ssl_url) { // ssl_url adalah URL HTTPS yang di-deploy
         await ctx.reply(
-          `Ini adalah link admin untuk <b>${selectedApp.name}</b>:`,
+          `Ini adalah link ke situs <b>${selectedApp.name}</b>:`,
           { 
-            reply_markup: { inline_keyboard: [[{ text: 'Buka Halaman Admin', url: selectedApp.admin_url }]] },
+            reply_markup: { inline_keyboard: [[{ text: 'Buka Web', url: selectedApp.ssl_url }]] },
             parse_mode: 'HTML' 
           }
         );
       } else {
-        await ctx.reply('Maaf, tidak dapat menemukan detail aplikasi atau URL admin.');
+        await ctx.reply('Maaf, tidak dapat menemukan URL situs untuk aplikasi ini.');
       }
     } catch (error) {
       console.error('Error saat menangani callback query:', error);

@@ -17,6 +17,18 @@ const NETLIFY_ACCESS_TOKEN = process.env.NETLIFY_ACCESS_TOKEN;
 // URL dasar Netlify API untuk mengambil daftar situs/aplikasi
 const NETLIFY_API_URL = 'https://api.netlify.com/api/v1';
 
+// DAFTAR APLIKASI YANG DIIZINKAN (EDIT INI SESUAI KEINGINAN ANDA)
+// Hanya aplikasi dengan nama di dalam array ini yang akan muncul di daftar bot.
+// Pastikan nama-nama ini sama persis dengan nama situs Anda di Netlify.
+const ALLOWED_APP_NAMES = [
+  "telegram-akses-bot", // Contoh: Tambahkan nama aplikasi Anda di sini
+  "apollostudio",
+  "rosette-studio",
+  "parfum-generator",
+  // Tambahkan nama aplikasi lain yang ingin Anda tampilkan di sini
+  // Contoh: "nama-aplikasi-anda-yang-lain",
+];
+
 // Memastikan Environment Variables penting sudah diatur.
 if (!TELEGRAM_BOT_TOKEN || !NETLIFY_ACCESS_TOKEN) {
   console.error('ERROR: TELEGRAM_BOT_TOKEN atau NETLIFY_ACCESS_TOKEN tidak diatur.');
@@ -39,12 +51,19 @@ bot.start(async (ctx) => {
   try {
     const apps = await fetchNetlifyApps();
     if (apps && apps.length > 0) {
-      // Membuat keyboard inline dengan nama aplikasi
-      const keyboard = apps.map((app) => [{ text: app.name, callback_data: `app_${app.id}` }]);
-      await ctx.reply(
-        'Silakan pilih aplikasi Netlify Anda:',
-        { reply_markup: { inline_keyboard: keyboard }, parse_mode: 'HTML' }
-      );
+      // --- PERUBAHAN DI SINI: Memfilter aplikasi berdasarkan ALLOWED_APP_NAMES ---
+      const filteredApps = apps.filter(app => ALLOWED_APP_NAMES.includes(app.name));
+
+      if (filteredApps.length > 0) {
+        // Membuat keyboard inline dengan nama aplikasi yang sudah difilter
+        const keyboard = filteredApps.map((app) => [{ text: app.name, callback_data: `app_${app.id}` }]);
+        await ctx.reply(
+          'Silakan pilih aplikasi Netlify Anda:',
+          { reply_markup: { inline_keyboard: keyboard }, parse_mode: 'HTML' }
+        );
+      } else {
+        await ctx.reply('Tidak ada aplikasi yang diizinkan ditemukan atau terjadi kesalahan.');
+      }
     } else {
       await ctx.reply('Tidak ada aplikasi Netlify yang ditemukan atau terjadi kesalahan.');
     }
